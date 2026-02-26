@@ -1,0 +1,33 @@
+version: '3.6'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - '5432:5432'
+
+  hasura:
+    image: hasura/graphql-engine:v2.36.0
+    ports:
+      - '8080:8080'
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+      HASURA_GRAPHQL_DEV_MODE: 'true'
+    depends_on:
+      - postgres
+
+#  react:
+#    build: ./react
+#    ports:
+#      - '3001:3001'
+#    volumes:
+#      - ./react:/app
+#      - /app/node_modules
+#    restart: always
+#    depends_on:
+#      - hasura
